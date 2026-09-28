@@ -1,52 +1,93 @@
 # Production Shift Analyzer
 
-A local-first shift reporting tool for manufacturing teams.
+A lightweight, local-first tool for turning manufacturing shift data into useful operating signals.
 
-Production Shift Analyzer turns the numbers already collected at the end of a shift into a compact operational view. Enter gross and net production, die activity and downtime events; the application derives scrap, operating time, hourly output, downtime rate and estimated production lost during downtime.
+**[Live Demo →](https://production-shift-analyzer.vercel.app)**
 
-## What it does
+![Production Shift Analyzer](./public/preview.png)
 
-- Records day and night shifts by production line
-- Captures gross production, net production, die changes and faulty dies
-- Supports multiple downtime events with configurable reasons
-- Calculates production metrics as values are entered
-- Estimates downtime loss in kilograms using the observed gross production rate
-- Keeps a local shift history with no account or backend required
-- Lets you configure shift duration, production lines and downtime reasons
-- Works on desktop and mobile
+## Overview
 
-## Calculations
+Production Shift Analyzer turns basic manufacturing shift records into a clear view of production performance.
 
-The application deliberately avoids a generic efficiency score. A meaningful efficiency figure needs a rated speed, target output or another defensible standard.
+Enter gross and net production, die changes, faulty dies and downtime events. The application calculates the rest and presents the shift as a concise operational dashboard.
 
-```text
-scrap              = gross production - net production
-scrap rate         = scrap / gross production
-operating time     = shift duration - downtime
-gross output/hour  = gross production / operating hours
-net output/hour    = net production / operating hours
-downtime rate      = downtime / shift duration
-die failure rate   = faulty dies / die changes
+No account, database or external service is required.
+
+### What it calculates
+
+- Scrap quantity and scrap rate
+- Actual operating time
+- Gross production per operating hour
+- Die failure rate
+- Total downtime
+- Estimated production loss caused by downtime
+- Production loss by downtime reason
+
+Completed shifts remain available in **History** for later review.
+
+## ⏱️ Downtime loss
+
+Downtime loss estimates how much production was lost while the line was stopped.
+
+The calculation uses the actual gross production rate of the shift:
+
+`Gross production rate = Gross production / Actual operating hours`
+
+`Estimated downtime loss = Gross production rate × Downtime hours`
+
+This is an operational estimate based on actual shift performance rather than a theoretical machine-capacity figure.
+
+Downtime events are also separated by reason, making it possible to see where production time — and estimated output — was lost.
+
+## 🛠️ Configuration
+
+The analyzer can be adapted to different production environments without changing the code.
+
+From **Settings**, users can manage:
+
+- Shift duration
+- Production lines
+- Downtime reasons
+
+Configuration is stored locally in the browser and immediately applied to the shift-entry workflow.
+
+## Tech
+
+- Next.js
+- React
+- TypeScript
+- CSS
+- Browser localStorage
+
+The interface is built without a UI framework or charting library.
+
+## ▶️ Run locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/iamozdenalperencal/production-shift-analyzer.git
+cd production-shift-analyzer
 ```
 
-Estimated downtime loss is calculated as:
-
-```text
-observed gross rate × downtime hours
-```
-
-It is an estimate based on the shift's observed running rate, not the rated capacity of the machine.
-
-## Run locally
-
-Requires a current Node.js LTS release.
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+Open:
+
+```text
+http://localhost:3000
+```
 
 For a production build:
 
@@ -55,22 +96,18 @@ npm run build
 npm start
 ```
 
-## Data and privacy
+## 🔒 Data & privacy
 
-Shift records and application settings are stored in the browser with `localStorage`. The current version does not send production data to a server and has no authentication or database dependency. Clearing site data will remove locally stored records.
+Production data never needs to leave the user's browser.
 
-## Stack
+Shift records and application settings are stored using `localStorage`. The application does not require a backend database for normal operation.
 
-- Next.js
-- React
-- TypeScript
-- CSS
-- Lucide icons
-
-## Scope
-
-This repository is intentionally small. It focuses on fast shift entry and useful derived metrics rather than trying to become a full MES. CSV/Excel exchange, target-based performance metrics and database-backed deployments are natural extensions, but are outside the current release.
+Clearing the browser's local storage will also remove saved shift records and settings.
 
 ## License
 
-MIT
+Released under the [MIT License](./LICENSE).
+
+---
+
+**engineered with obsession — OAC / 2026 / TR**
